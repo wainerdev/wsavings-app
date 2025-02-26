@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { CategoryDto, ListOfCategory } from '@/shared/models/Category';
+import { User, UserDto } from "@/shared/models/User";
 
 const BASE_API_URL = "http://localhost:3000"; // TODO: Move the variable to the env file
 // const BASE_API_URL = "https://wsavings.onrender.com";
@@ -19,12 +20,18 @@ export const savingsAPI = createApi({
   baseQuery: baseQuery,
   tagTypes: ["Category"],
   endpoints: (builder) => ({
-    getCategories: builder.query<ListOfCategory, { userId: number}>({
-      query: ({ userId }) => ({
-        url: `/categories/${userId}`,
+    getCategories: builder.query<ListOfCategory, {}>({
+      query: () => ({
+        url: '/categories',
         method: "GET",
       }),
       providesTags: ['Category']
+    }),
+    getCategoryById: builder.query<CategoryDto, number>({
+      query: (id) => ({
+        url: `/categories/${id}`,
+        method: "GET",
+      }),
     }),
     saveCategory: builder.mutation<void, CategoryDto>({
       query: ({ title, userId }) => ({
@@ -41,6 +48,26 @@ export const savingsAPI = createApi({
       }),
       invalidatesTags: ["Category"],
     }),
+    signUp: builder.mutation<void, UserDto>({
+      query: (user: User) => ({
+        url: "/auth/signup",
+        method: "POST",
+        body: user,
+      }),
+    }),
+    signIn: builder.mutation<void, { email: string; password: string }>({
+      query: ({ email, password }) => ({
+        url: "/auth/signin",
+        method: "POST",
+        body: { email, password },
+      }),
+    }),
+    getProfile: builder.query<UserDto, {}>({
+      query: () => ({
+        url: "/auth/profile",
+        method: "GET",
+      }),
+    })
   }),
 });
 
@@ -48,6 +75,11 @@ export const {
   endpoints,
   useLazyGetCategoriesQuery,
   useGetCategoriesQuery,
+  useGetCategoryByIdQuery,
+  useLazyGetCategoryByIdQuery,
   useSaveCategoryMutation,
-  useDeleteCategoryMutation
+  useDeleteCategoryMutation,
+  useGetProfileQuery,
+  useSignUpMutation,
+  useSignInMutation
 } = savingsAPI;

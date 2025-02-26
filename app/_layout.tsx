@@ -9,11 +9,13 @@ import { Provider } from "react-redux";
 import store from "@/store";
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useGetProfileQuery, useSignInMutation } from '@/services/wsavingsAPI';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const { data } = useGetProfileQuery({})
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -28,6 +30,8 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
+
+  console.log('data', data);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

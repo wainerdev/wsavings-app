@@ -4,10 +4,12 @@ import { useDispatch } from "react-redux";
 import { savingsAPI } from "@/services/wsavingsAPI";
 // SLICES
 import searchProfessionReducer from "@/store/slices/searchProfessionSlice";
+import userAuthReducer from "@/store/slices/userAuthSlice";
 
 const rootReducer = combineReducers({
   [savingsAPI.reducerPath]: savingsAPI.reducer,
   searchProfession: searchProfessionReducer,
+  userAuth: userAuthReducer, 
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
