@@ -18,7 +18,7 @@ const baseQuery = fetchBaseQuery({
 
 export const savingsAPI = createApi({
   baseQuery: baseQuery,
-  tagTypes: ["Category", "User"],
+  tagTypes: ["Category", "User", "Profile"],
   endpoints: (builder) => ({
     getCategories: builder.query<ListOfCategory, {}>({
       query: () => ({
@@ -54,7 +54,6 @@ export const savingsAPI = createApi({
         method: "POST",
         body: user,
       }),
-      invalidatesTags: ["User"]
     }),
     signIn: builder.mutation<void, { email: string; password: string }>({
       query: ({ email, password }) => ({
@@ -68,7 +67,7 @@ export const savingsAPI = createApi({
         url: "/users/profile",
         method: "GET",
       }),
-      providesTags: ["User"]
+      providesTags: ["Profile"]
     })
   }),
 });

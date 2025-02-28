@@ -13,6 +13,7 @@ import { Provider } from "react-redux";
 import store from "@/store";
 import LayoutProtector from "@/components/middleware/LayoutProtector";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { PaperProvider } from 'react-native-paper';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -38,20 +39,22 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Provider store={store}>
-        <LayoutProtector>
-          <Stack>
-            <Stack.Screen name="(public)" options={{ title: "Welcome" }} />
-            <Stack.Screen name="(private)" options={{ title: "Home" }} />
-            <Stack.Screen
-              name="+not-found"
-              options={{ title: "Not Found" }}
-            />
-          </Stack>
-        </LayoutProtector>
-        <StatusBar style="auto" />
-      </Provider>
-    </ThemeProvider>
+    <PaperProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Provider store={store}>
+          <LayoutProtector>
+            <Stack>
+              <Stack.Screen name="(public)" options={{ title: "Welcome", headerShown: false }} />
+              <Stack.Screen name="(private)" options={{ title: "Home", headerShown: false }} />
+              <Stack.Screen
+                name="+not-found"
+                options={{ title: "Not Found" }}
+              />
+            </Stack>
+          </LayoutProtector>
+          <StatusBar style="auto" />
+        </Provider>
+      </ThemeProvider>
+    </PaperProvider>
   );
 }
