@@ -75,7 +75,7 @@ export default function TabWSaving() {
 
 
         <View style={styles.wrapper}>
-          {data?.map((category, id) => (
+          {data?.categories.map((category, id) => (
             <Pressable
               key={id}
               style={styles.itemButtonWrapper}

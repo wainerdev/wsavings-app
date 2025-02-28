@@ -9,6 +9,8 @@ export interface Category {
   updatedAt: Date;
 }
 
-export type ListOfCategory = Category[];
+export type ListOfCategory = {
+  categories: Category[];
+}
 
 export type CategoryDto = Omit<Category, 'id' | 'createdAt' | 'updatedAt' | 'user'>;
