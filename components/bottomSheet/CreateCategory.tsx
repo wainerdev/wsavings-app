@@ -1,59 +1,95 @@
-import React from 'react';
-import * as Yup from 'yup';
-import { Text, StyleSheet } from 'react-native';
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
-import { useSaveCategoryMutation } from '@/services/wsavingsAPI'
-import { CategoryDto } from '@/shared/models/Category';
-import { ThemedView } from '../ThemedView';
-import { ErrorMessage, Field, Form, Formik, FormikHelpers } from 'formik';
+import React, { useEffect } from "react";
+import * as Yup from "yup";
+import { StyleSheet, View } from "react-native";
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { useSaveCategoryMutation } from "@/services/wsavingsAPI";
+import { CategoryDto } from "@/shared/models/Category";
+import { Formik } from "formik";
+import FormField from "@/components/FormField";
+import { Button, Text } from "react-native-paper";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
+import { Box } from "@/components/Box";
 
 type Props = {
-  bottomSheetCreateCategoryRef: React.RefObject<BottomSheetModal>;
-  bottomSheetCreateCategoryChange: (index: number) => void;
-}
+  componentRef: React.RefObject<BottomSheetModal>;
+  onClose?: () => void;
+};
 
 const userSchema = Yup.object({
-  title: Yup.string().required('Title is required')
+  title: Yup.string().required("Category name is required"),
 });
 
-const ButtonSheetCreateCategory = ({ bottomSheetCreateCategoryRef, bottomSheetCreateCategoryChange }: Props) => {
-  const [saveCategory, { isLoading }] = useSaveCategoryMutation()
+const ButtonSheetCreateCategory = ({
+  componentRef,
+  onClose,
+}: Props) => {
+  const { signedUser } = useSelector(({ session }: RootState) => session);
+  const [saveCategory, { isLoading, isError, isSuccess }] =
+    useSaveCategoryMutation();
 
-  const initialValues: CategoryDto = { title: '', userId: 1 };
-
-  const handleSubmit = (values: CategoryDto, { setSubmitting, resetForm }: FormikHelpers<CategoryDto>) => {
-    saveCategory(values);
-    setSubmitting(false);
-    resetForm();
-    bottomSheetCreateCategoryChange(0);
+  const initialValues: CategoryDto = {
+    title: "",
+    userId: signedUser?.id as number,
   };
+
+  const onSubmit = (values: CategoryDto) => {
+    saveCategory(values);
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      onClose && onClose();
+    }
+  }, [isSuccess]);
 
   return (
     <BottomSheetModal
-      snapPoints={['25%', '100%']}
-      stackBehavior='push'
-      ref={bottomSheetCreateCategoryRef}
-      onChange={bottomSheetCreateCategoryChange}
+      snapPoints={["25%", "80%"]}
+      stackBehavior="push"
+      ref={componentRef}
     >
       <BottomSheetView style={styles.container}>
-        <ThemedView>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={userSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <label htmlFor="title">title</label>
-                <Field type="text" name="title" />
-                <ErrorMessage name="title" />
-
-                <button type="submit" disabled={isSubmitting}>Submit</button>
-              </Form>
-            )}
-          </Formik>
-          {isLoading && <Text>Loading...</Text>}
-        </ThemedView>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={userSchema}
+          onSubmit={onSubmit}
+        >
+          {({
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            values,
+            errors,
+            touched,
+          }) => (
+            <Box style={styles.form}>
+              <View style={styles.formBody}>
+                <FormField
+                  touched={touched.title}
+                  label="Category"
+                  onChangeText={handleChange("title")}
+                  onBlur={handleBlur("title")}
+                  value={values.title}
+                  error={errors.title}
+                />
+              </View>
+              <View style={styles.formFooter}>
+                <Button
+                  onPress={() => handleSubmit()}
+                  mode="elevated"
+                  disabled={isLoading}
+                  loading={isLoading}
+                >
+                  Create
+                </Button>
+                <View>
+                  {isError && <Text>Error creating the new category</Text>}
+                </View>
+              </View>
+            </Box>
+          )}
+        </Formik>
       </BottomSheetView>
     </BottomSheetModal>
   );
@@ -62,9 +98,20 @@ const ButtonSheetCreateCategory = ({ bottomSheetCreateCategoryRef, bottomSheetCr
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'purple',
-    justifyContent: 'center',
+  },
+  form: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  formBody: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+  },
+  formFooter: {
+    display: "flex",
+    justifyContent: "center",
+    height: 64,
   },
 });
 

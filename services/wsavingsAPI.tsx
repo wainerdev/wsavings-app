@@ -1,4 +1,8 @@
-import type { Category, CategoryDto, ListOfCategory } from '@/shared/models/Category';
+import type {
+  Category,
+  CategoryDto,
+  ListOfCategory,
+} from "@/shared/models/Category";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { User, UserDto } from "@/shared/models/User";
 
@@ -22,10 +26,10 @@ export const savingsAPI = createApi({
   endpoints: (builder) => ({
     getCategories: builder.query<ListOfCategory, {}>({
       query: () => ({
-        url: '/categories',
+        url: "/categories",
         method: "GET",
       }),
-      providesTags: ['Category']
+      providesTags: ["Category"],
     }),
     getCategoryById: builder.query<Category, number>({
       query: (id) => ({
@@ -48,6 +52,17 @@ export const savingsAPI = createApi({
       }),
       invalidatesTags: ["Category"],
     }),
+    updateCategory: builder.mutation<
+      void,
+      { categoryId: number; category: CategoryDto }
+    >({
+      query: ({ categoryId, category }) => ({
+        url: `/categories/${categoryId}`,
+        method: "put",
+        body: category,
+      }),
+      invalidatesTags: ["Category"],
+    }),
     signUp: builder.mutation<void, UserDto>({
       query: (user: User) => ({
         url: "/users/sign-up",
@@ -62,13 +77,13 @@ export const savingsAPI = createApi({
         body: { email, password },
       }),
     }),
-    getProfile: builder.query<User, {}>({
+    getProfile: builder.query<{ user: User }, {}>({
       query: () => ({
         url: "/users/profile",
         method: "GET",
       }),
-      providesTags: ["Profile"]
-    })
+      providesTags: ["Profile"],
+    }),
   }),
 });
 
@@ -77,10 +92,11 @@ export const {
   useLazyGetCategoriesQuery,
   useGetCategoriesQuery,
   useGetCategoryByIdQuery,
+  useUpdateCategoryMutation,
   useLazyGetCategoryByIdQuery,
   useSaveCategoryMutation,
   useDeleteCategoryMutation,
   useGetProfileQuery,
   useSignUpMutation,
-  useSignInMutation
+  useSignInMutation,
 } = savingsAPI;

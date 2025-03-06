@@ -9,11 +9,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import store from "@/store";
 import LayoutProtector from "@/components/middleware/LayoutProtector";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { PaperProvider } from 'react-native-paper';
+import { PaperProvider } from "react-native-paper";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -40,12 +41,18 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
   return (
     <PaperProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      {/* <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}> */}
         <Provider store={store}>
           <LayoutProtector>
             <Stack>
-              <Stack.Screen name="(public)" options={{ title: "Welcome", headerShown: false }} />
-              <Stack.Screen name="(private)" options={{ title: "Home", headerShown: false }} />
+              <Stack.Screen
+                name="(public)"
+                options={{ title: "Welcome", headerShown: false }}
+              />
+              <Stack.Screen
+                name="(private)"
+                options={{ title: "Home", headerShown: false }}
+              />
               <Stack.Screen
                 name="+not-found"
                 options={{ title: "Not Found" }}
@@ -54,7 +61,7 @@ function RootLayoutNav() {
           </LayoutProtector>
           <StatusBar style="auto" />
         </Provider>
-      </ThemeProvider>
+      {/* </ThemeProvider> */}
     </PaperProvider>
   );
 }

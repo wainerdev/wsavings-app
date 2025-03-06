@@ -39,9 +39,16 @@ export default function TabLayout() {
         }}
       />
        <Tabs.Screen
-        name="wsavings"
+        name="Categories"
         options={{
-          title: 'WSavings',
+          title: 'categories',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />

@@ -13,7 +13,7 @@ interface Props {
     | undefined;
   value?: string | undefined;
   error?: string | undefined;
-  label: string;
+  label?: string;
   touched: boolean | undefined;
 }
 
@@ -24,7 +24,7 @@ export default function FormField(props: Props) {
   return (
     <>
       <TextInput
-        label={label}
+        label={label ?? ''}
         onChangeText={onChangeText}
         onBlur={onBlur}
         value={value}
