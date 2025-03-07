@@ -14,7 +14,9 @@ import { Provider } from "react-redux";
 import store from "@/store";
 import LayoutProtector from "@/components/middleware/LayoutProtector";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { PaperProvider } from "react-native-paper";
+import { PaperProvider, Text } from "react-native-paper";
+import {  MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
+import useToggleTheme  from "@/hooks/useToggleTheme";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -39,8 +41,10 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const { theme } = useToggleTheme();
+  const isDarkMode = theme === "dark";
   return (
-    <PaperProvider>
+    <PaperProvider theme={isDarkMode ? MD3DarkTheme : MD3LightTheme}>
       {/* <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}> */}
         <Provider store={store}>
           <LayoutProtector>

@@ -1,36 +1,34 @@
+import { FormikProps } from "formik";
 import React from "react";
-import {
-  NativeSyntheticEvent,
-  TextInputFocusEventData,
-} from "react-native";
-import { Text, TextInput } from "react-native-paper";
+import { Text, TextInput, TextInputProps } from "react-native-paper";
 
-interface Props {
-  onChangeText?: (((text: string) => void) & Function) | undefined;
-  onBlur?:
-    | (((e: NativeSyntheticEvent<TextInputFocusEventData>) => void) &
-        ((args: any) => void))
-    | undefined;
-  value?: string | undefined;
-  error?: string | undefined;
-  label?: string;
-  touched: boolean | undefined;
+interface Props extends TextInputProps {
+  formKey: string;
+  formProps: FormikProps<any>;
 }
 
-export default function FormField(props: Props) {
-  const { onChangeText, onBlur, value, error, label, touched } = props;
+const capitalize = (s: string) => {
+  if (typeof s !== "string") return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
 
-  const hasError = !!error && touched;
+export default function FormField({ formProps, formKey, ...rest }: Props) {
+  const { values, errors, touched, handleChange, handleBlur } = formProps;
+
+  const hasError = errors[formKey] && touched[formKey];
   return (
     <>
       <TextInput
-        label={label ?? ''}
-        onChangeText={onChangeText}
-        onBlur={onBlur}
-        value={value}
-        error={hasError}
+        onChangeText={handleChange(formKey)}
+        onBlur={handleBlur(formKey)}
+        value={values[formKey]}
+        error={!!hasError}
+        {...rest}
+        label={rest.label || capitalize(formKey)}
       />
-      {hasError && <Text>{error}</Text>}
+      {hasError && typeof errors[formKey] === "string" && (
+        <Text>{errors[formKey]}</Text>
+      )}
     </>
   );
 }

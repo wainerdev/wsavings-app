@@ -1,12 +1,8 @@
 import { Dimensions } from "react-native";
 import { StyleSheet, View, Pressable } from "react-native";
-import {
-  useGetCategoriesQuery,
-  useSaveCategoryMutation,
-  useDeleteCategoryMutation,
-} from "@/services/wsavingsAPI";
+import { useGetCategoriesQuery } from "@/services/wsavingsAPI";
 import { useCallback, useRef, useState } from "react";
-import { Category, CategoryDto } from "@/shared/models/Category";
+import { Category } from "@/shared/models/Category";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import ButtonSheetCreateCategory from "@/components/bottomSheet/CreateCategory";
 import ButtonSheetWrapper from "@/components/bottomSheet/Wrapper";
@@ -14,7 +10,7 @@ import ButtonSheetPreviewCategory from "@/components/bottomSheet/PreviewCategory
 import { Skeleton } from "moti/skeleton";
 import { MotiView } from "moti";
 import { Text } from "react-native-paper";
-import { Box, BOX_PADDING } from "@/components/Box";
+import { Box, BOX_PADDING } from "@/components/ui/Box";
 
 const SKELETON_ITEMS = Array.from({ length: 17 });
 
@@ -23,7 +19,7 @@ export default function TabCategories() {
   const bottomSheetPreviewCategoryRef = useRef<BottomSheetModal>(null);
   const { data, isLoading } = useGetCategoriesQuery({});
   const singleCategorySizes = {
-    width: (Dimensions.get("window").width - ((BOX_PADDING * 2) + 16)) / 3,
+    width: (Dimensions.get("window").width - (BOX_PADDING * 2 + 16)) / 3,
     height: 100,
   };
 
@@ -31,7 +27,6 @@ export default function TabCategories() {
     null
   );
 
-  // callbacks
   const handleOpenCategoryCreateModal = useCallback(() => {
     bottomSheetCreateCategoryRef.current?.present();
   }, []);

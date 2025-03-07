@@ -9,6 +9,7 @@ import FormField from "@/components/FormField";
 import { router } from "expo-router";
 
 const userSchema = Yup.object({
+  fullName: Yup.string().required("Full Name is required"),
   email: Yup.string()
     .email("Please enter valid email")
     .required("Email is required")
@@ -56,48 +57,31 @@ export default function SignUpScreen() {
           validationSchema={userSchema}
           onSubmit={onSubmit}
         >
-          {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            values,
-            errors,
-            touched,
-          }) => (
+          {(props) => (
             <View style={styles.form}>
               <View>
                 <FormField
-                  touched={touched.fullName}
+                  formProps={props}
+                  formKey="fullName"
                   label="Full Name"
-                  onChangeText={handleChange("fullName")}
-                  onBlur={handleBlur("fullName")}
-                  value={values.fullName}
-                  error={errors.fullName}
                 />
               </View>
               <View>
                 <FormField
-                  touched={touched.email}
-                  label="Email"
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
-                  value={values.email}
-                  error={errors.email}
+                  formProps={props}
+                  formKey="email"
                 />
               </View>
               <View>
                 <FormField
-                  touched={touched.password}
-                  label="Password"
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                  value={values.password}
-                  error={errors.password}
+                  formProps={props}
+                  formKey="password"
+                  secureTextEntry
                 />
               </View>
               <View>
                 <Button
-                  onPress={() => handleSubmit()}
+                  onPress={() => props.handleSubmit()}
                   mode="contained"
                   disabled={isLoading}
                   loading={isLoading}

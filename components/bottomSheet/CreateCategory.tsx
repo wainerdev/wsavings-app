@@ -9,7 +9,7 @@ import FormField from "@/components/FormField";
 import { Button, Text } from "react-native-paper";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
-import { Box } from "@/components/Box";
+import { Box } from "@/components/ui/Box";
 
 type Props = {
   componentRef: React.RefObject<BottomSheetModal>;
@@ -55,28 +55,18 @@ const ButtonSheetCreateCategory = ({
           validationSchema={userSchema}
           onSubmit={onSubmit}
         >
-          {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            values,
-            errors,
-            touched,
-          }) => (
+          {(props) => (
             <Box style={styles.form}>
               <View style={styles.formBody}>
                 <FormField
-                  touched={touched.title}
+                  formProps={props}
+                  formKey="title"
                   label="Category"
-                  onChangeText={handleChange("title")}
-                  onBlur={handleBlur("title")}
-                  value={values.title}
-                  error={errors.title}
                 />
               </View>
               <View style={styles.formFooter}>
                 <Button
-                  onPress={() => handleSubmit()}
+                  onPress={() => props.handleSubmit()}
                   mode="elevated"
                   disabled={isLoading}
                   loading={isLoading}

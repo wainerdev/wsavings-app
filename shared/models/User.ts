@@ -3,6 +3,7 @@ export interface User {
   email: string;
   password: string;
   fullName: string;
+  balance: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -10,4 +11,4 @@ export interface User {
 
 export type ListOfUsers = User[];
 
-export type UserDto = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
+export type UserDto = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'balance'>;

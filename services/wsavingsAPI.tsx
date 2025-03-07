@@ -5,6 +5,7 @@ import type {
 } from "@/shared/models/Category";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { User, UserDto } from "@/shared/models/User";
+import { ListOfTransaction, TransactionDto } from "@/shared/models/Transaction";
 
 const BASE_API_URL = "http://localhost:3000"; // TODO: Move the variable to the env file
 // const BASE_API_URL = "https://wsavings.onrender.com";
@@ -22,7 +23,7 @@ const baseQuery = fetchBaseQuery({
 
 export const savingsAPI = createApi({
   baseQuery: baseQuery,
-  tagTypes: ["Category", "User", "Profile"],
+  tagTypes: ["Category", "User", "Profile", "Transaction"],
   endpoints: (builder) => ({
     getCategories: builder.query<ListOfCategory, {}>({
       query: () => ({
@@ -84,6 +85,30 @@ export const savingsAPI = createApi({
       }),
       providesTags: ["Profile"],
     }),
+    saveTransaction: builder.mutation<
+      void,
+      TransactionDto
+    >({
+      query: (transaction) => ({
+        url: `/transactions`,
+        method: "post",
+        body: transaction,
+      }),
+      invalidatesTags: ["Transaction", "Profile"],
+    }),
+    getTransactionByDateRange: builder.query<
+      ListOfTransaction,
+      {
+        startDate: string;
+        endDate: string;
+      }
+    >({
+      query: ({startDate, endDate}) => ({
+        url: `/transactions/${startDate}/${endDate}`,
+        method: "GET",
+      }),
+      providesTags: ["Transaction"],
+    }),
   }),
 });
 
@@ -99,4 +124,6 @@ export const {
   useGetProfileQuery,
   useSignUpMutation,
   useSignInMutation,
+  useSaveTransactionMutation,
+  useGetTransactionByDateRangeQuery,
 } = savingsAPI;

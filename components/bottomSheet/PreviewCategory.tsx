@@ -13,7 +13,7 @@ import { CategoryDto } from "@/shared/models/Category";
 import { Formik } from "formik";
 import FormField from "@/components/FormField";
 import { Button } from "react-native-paper";
-import { Box } from "@/components/Box";
+import { Box } from "@/components/ui/Box";
 
 type Props = {
   category: Category | null;
@@ -81,23 +81,13 @@ const ButtonSheetPreviewCategory = ({
           validationSchema={userSchema}
           onSubmit={onSubmit}
         >
-          {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            values,
-            errors,
-            touched,
-          }) => (
+          {(props) => (
             <Box style={styles.form}>
               <View style={styles.formBody}>
                 <FormField
-                  touched={touched.title}
+                  formProps={props}
+                  formKey="title"
                   label="Category Name"
-                  onChangeText={handleChange("title")}
-                  onBlur={handleBlur("title")}
-                  value={values.title}
-                  error={errors.title}
                 />
               </View>
               <View style={styles.formFooter}>
@@ -113,7 +103,7 @@ const ButtonSheetPreviewCategory = ({
 
                 <Button
                   icon="update"
-                  onPress={() => handleSubmit()}
+                  onPress={() => props.handleSubmit()}
                   mode="contained"
                   disabled={isLoading}
                   loading={isUpdateCategoryLoading}

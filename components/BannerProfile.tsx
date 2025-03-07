@@ -19,7 +19,7 @@ export default function BannerProfile() {
       <View style={styles.container}>
         <View style={styles.profile}>
           <View>
-            <Text variant="titleMedium" selectionColor="red">
+            <Text variant="titleMedium">
               Hi,{" "}
               {isLoading ? (
                 <Skeleton width={100} height={14} />
@@ -29,7 +29,7 @@ export default function BannerProfile() {
             </Text>
             <Text variant="bodyLarge">
               Balance:{" "}
-              {isLoading ? <Skeleton width={100} height={14} /> : "$10000"}
+              {isLoading ? <Skeleton width={100} height={14} /> : `${data?.user.balance}k`}
             </Text>
           </View>
           <Avatar.Image
@@ -46,7 +46,6 @@ export default function BannerProfile() {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    padding: 34,
   },
   container: {
     backgroundColor: "white",

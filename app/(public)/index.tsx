@@ -50,38 +50,23 @@ export default function SignInScreen() {
           validationSchema={userSchema}
           onSubmit={onSubmit}
         >
-          {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            values,
-            errors,
-            touched,
-          }) => (
+          {(props) => (
             <View style={styles.form}>
               <View>
                 <FormField
-                  touched={touched.email}
-                  label="email"
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
-                  value={values.email}
-                  error={errors.email}
+                  formProps={props}
+                  formKey="email"
                 />
               </View>
               <View>
                 <FormField
-                  touched={touched.password}
-                  label="password"
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                  value={values.password}
-                  error={errors.password}
+                  formProps={props}
+                  formKey="password"
                 />
               </View>
               <View>
                 <Button
-                  onPress={() => handleSubmit()}
+                  onPress={() => props.handleSubmit()}
                   mode="contained"
                   disabled={isLoading}
                   loading={isLoading}
