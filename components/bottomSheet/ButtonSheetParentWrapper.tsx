@@ -6,7 +6,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function ButtonSheetWrapper({ children }: Props) {
+export default function ButtonSheetParentWrapper({ children }: Props) {
   return (
     <GestureHandlerRootView style={styles.container}>
       <BottomSheetModalProvider>{children}</BottomSheetModalProvider>

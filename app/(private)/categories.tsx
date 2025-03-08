@@ -4,9 +4,9 @@ import { useGetCategoriesQuery } from "@/services/wsavingsAPI";
 import { useCallback, useRef, useState } from "react";
 import { Category } from "@/shared/models/Category";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import ButtonSheetCreateCategory from "@/components/bottomSheet/CreateCategory";
-import ButtonSheetWrapper from "@/components/bottomSheet/Wrapper";
-import ButtonSheetPreviewCategory from "@/components/bottomSheet/PreviewCategory";
+import ButtonSheetCreateCategory from "@/components/bottomSheet/modals/CreateCategory";
+import ButtonSheetParentWrapper from "@/components/bottomSheet/ButtonSheetParentWrapper";
+import ButtonSheetPreviewCategory from "@/components/bottomSheet/modals/PreviewCategory";
 import { Skeleton } from "moti/skeleton";
 import { MotiView } from "moti";
 import { Text, Card } from "react-native-paper";
@@ -41,7 +41,7 @@ export default function TabCategories() {
   }, []);
 
   return (
-    <ButtonSheetWrapper>
+    <ButtonSheetParentWrapper>
       <Box>
         <ButtonSheetCreateCategory
           componentRef={bottomSheetCreateCategoryRef}
@@ -101,7 +101,7 @@ export default function TabCategories() {
           </View>
         )}
       </Box>
-    </ButtonSheetWrapper>
+    </ButtonSheetParentWrapper>
   );
 }
 

@@ -2,9 +2,9 @@ import { Dimensions, StyleSheet, View } from "react-native";
 import BannerProfile from "@/components/BannerProfile";
 import { Box, BOX_PADDING } from "@/components/ui/Box";
 import { Button, Text, Icon, useTheme, IconButton } from "react-native-paper";
-import ButtonSheetWrapper from "@/components/bottomSheet/Wrapper";
-import ButtonSheetCreateTransaction from "@/components/bottomSheet/CreateTransaction";
-import ButtonSheetPreviewTransactions from "@/components/bottomSheet/PreviewTransactions";
+import ButtonSheetParentWrapper from "@/components/bottomSheet/ButtonSheetParentWrapper";
+import ButtonSheetCreateTransaction from "@/components/bottomSheet/modals/CreateTransaction";
+import ButtonSheetPreviewTransactions from "@/components/bottomSheet/modals/PreviewTransactions";
 import { useCallback, useRef, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useGetTransactionByDateRangeQuery } from "@/services/wsavingsAPI";
@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import { useGroupedTransaction } from "@/hooks/useGroupedTransaction";
 import { TransactionType } from "@/shared/models/Transaction";
 import CircleIcon from "@/components/CircleIcon";
-import { ButtonSheetSelectTransactionType } from "@/components/bottomSheet/SelectTransactionType";
+import { ButtonSheetSelectTransactionType } from "@/components/bottomSheet/modals/SelectTransactionType";
 import { BarChart } from "@/components/BarChart";
 
 
@@ -59,7 +59,7 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <ButtonSheetWrapper>
+    <ButtonSheetParentWrapper>
       <Box style={styles.container}>
         <View style={styles.widgets}>
           <BannerProfile />
@@ -129,7 +129,7 @@ export default function HomeScreen() {
           </Button>
         </Box>
       </Box>
-    </ButtonSheetWrapper>
+    </ButtonSheetParentWrapper>
   );
 }
 

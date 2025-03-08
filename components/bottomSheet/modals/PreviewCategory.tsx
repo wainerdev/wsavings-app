@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import * as Yup from "yup";
 import { StyleSheet, View } from "react-native";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   useDeleteCategoryMutation,
   useUpdateCategoryMutation,
@@ -14,6 +14,7 @@ import { Formik } from "formik";
 import FormField from "@/components/FormField";
 import { Button } from "react-native-paper";
 import { Box } from "@/components/ui/Box";
+import { ButtonSheetModalWrapper } from "@/components/bottomSheet/ButtonSheetModalWrapper";
 
 type Props = {
   category: Category | null;
@@ -70,52 +71,46 @@ const ButtonSheetPreviewCategory = ({
   }, [isDeleteCategorySuccess, isUpdateCategorySuccess]);
 
   return (
-    <BottomSheetModal
-      snapPoints={["45%", "80%"]}
-      stackBehavior="push"
-      ref={componentRef}
-    >
-      <BottomSheetView style={styles.container}>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={userSchema}
-          onSubmit={onSubmit}
-        >
-          {(props) => (
-            <Box style={styles.form}>
-              <View style={styles.formBody}>
-                <FormField
-                  formProps={props}
-                  formKey="title"
-                  label="Category Name"
-                />
-              </View>
-              <View style={styles.formFooter}>
-                <Button
-                  icon="delete"
-                  onPress={() => handleDeleteCategory()}
-                  mode="contained"
-                  disabled={isLoading}
-                  loading={isDeleteCategoryLoading}
-                >
-                  Delete
-                </Button>
+    <ButtonSheetModalWrapper snapPoints={["45%", "80%"]} $ref={componentRef}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={userSchema}
+        onSubmit={onSubmit}
+      >
+        {(props) => (
+          <Box style={styles.form}>
+            <View style={styles.formBody}>
+              <FormField
+                formProps={props}
+                formKey="title"
+                label="Category Name"
+              />
+            </View>
+            <View style={styles.formFooter}>
+              <Button
+                icon="delete"
+                onPress={() => handleDeleteCategory()}
+                mode="contained"
+                disabled={isLoading}
+                loading={isDeleteCategoryLoading}
+              >
+                Delete
+              </Button>
 
-                <Button
-                  icon="update"
-                  onPress={() => props.handleSubmit()}
-                  mode="contained"
-                  disabled={isLoading}
-                  loading={isUpdateCategoryLoading}
-                >
-                  Update
-                </Button>
-              </View>
-            </Box>
-          )}
-        </Formik>
-      </BottomSheetView>
-    </BottomSheetModal>
+              <Button
+                icon="update"
+                onPress={() => props.handleSubmit()}
+                mode="contained"
+                disabled={isLoading}
+                loading={isUpdateCategoryLoading}
+              >
+                Update
+              </Button>
+            </View>
+          </Box>
+        )}
+      </Formik>
+    </ButtonSheetModalWrapper>
   );
 };
 

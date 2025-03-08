@@ -10,6 +10,7 @@ import { Button, Text } from "react-native-paper";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import { Box } from "@/components/ui/Box";
+import { ButtonSheetModalWrapper } from "@/components/bottomSheet/ButtonSheetModalWrapper";
 
 type Props = {
   componentRef: React.RefObject<BottomSheetModal>;
@@ -44,12 +45,10 @@ const ButtonSheetCreateCategory = ({
   }, [isSuccess]);
 
   return (
-    <BottomSheetModal
+    <ButtonSheetModalWrapper
       snapPoints={["25%", "80%"]}
-      stackBehavior="push"
-      ref={componentRef}
+      $ref={componentRef}
     >
-      <BottomSheetView style={styles.container}>
         <Formik
           initialValues={initialValues}
           validationSchema={userSchema}
@@ -80,8 +79,7 @@ const ButtonSheetCreateCategory = ({
             </Box>
           )}
         </Formik>
-      </BottomSheetView>
-    </BottomSheetModal>
+    </ButtonSheetModalWrapper>
   );
 };
 

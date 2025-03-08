@@ -6,13 +6,16 @@ import { useTheme } from "react-native-paper";
 import { Box } from "@/components/ui/Box";
 
 type Props = {
-  categoryId: number | null;
-  componentRef: React.RefObject<BottomSheetModal>;
-  onClose?: () => void;
+  $ref: React.RefObject<BottomSheetModal>;
   children: React.ReactNode;
+  snapPoints?: string[];
 };
 
-const ModalWrapper = ({ componentRef, children }: Props) => {
+export function ButtonSheetModalWrapper({
+  $ref,
+  children,
+  snapPoints = ["30%", "100%"],
+}: Props) {
   const theme = useTheme();
 
   return (
@@ -22,9 +25,9 @@ const ModalWrapper = ({ componentRef, children }: Props) => {
         borderTopRightRadius: 9,
         borderTopLeftRadius: 9,
       }}
-      snapPoints={["45%", "80%"]}
-      stackBehavior="push"
-      ref={componentRef}
+      snapPoints={snapPoints}
+      stackBehavior="switch"
+      ref={$ref}
     >
       <BottomSheetView
         style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -33,18 +36,10 @@ const ModalWrapper = ({ componentRef, children }: Props) => {
       </BottomSheetView>
     </BottomSheetModal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  listWrapper: {
-    marginLeft: 16,
-    display: "flex",
-    flexDirection: "column",
-    gap: 6,
-  },
 });
-
-export default ModalWrapper;
