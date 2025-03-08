@@ -9,18 +9,22 @@ import ButtonSheetWrapper from "@/components/bottomSheet/Wrapper";
 import ButtonSheetPreviewCategory from "@/components/bottomSheet/PreviewCategory";
 import { Skeleton } from "moti/skeleton";
 import { MotiView } from "moti";
-import { Text } from "react-native-paper";
+import { Text, Card } from "react-native-paper";
 import { Box, BOX_PADDING } from "@/components/ui/Box";
+import { useTheme } from "react-native-paper";
+
 
 const SKELETON_ITEMS = Array.from({ length: 17 });
 
 export default function TabCategories() {
+  const theme = useTheme();
   const bottomSheetCreateCategoryRef = useRef<BottomSheetModal>(null);
   const bottomSheetPreviewCategoryRef = useRef<BottomSheetModal>(null);
   const { data, isLoading } = useGetCategoriesQuery({});
   const singleCategorySizes = {
     width: (Dimensions.get("window").width - (BOX_PADDING * 2 + 16)) / 3,
     height: 100,
+    backgroundColor: theme.colors.elevation.level2,
   };
 
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
@@ -53,7 +57,7 @@ export default function TabCategories() {
           }}
         />
 
-        <Text variant="titleMedium">Close Your Categories</Text>
+        <Text variant="titleMedium">Chose Your Categories</Text>
 
         {isLoading ? (
           <MotiView
@@ -65,28 +69,29 @@ export default function TabCategories() {
             {SKELETON_ITEMS.map((_, index) => (
               <Skeleton
                 key={index}
-                width={(Dimensions.get("window").width - 64) / 3}
-                height={100}
+                {...singleCategorySizes}
               />
             ))}
           </MotiView>
         ) : (
           <View style={styles.categories}>
             {data?.categories.map((category, id) => (
-              <Pressable
+              <Card
                 key={id}
                 style={{ ...styles.singeCategory, ...singleCategorySizes }}
                 onPress={() => handleOpenCategoryPreviewModal(category)}
                 disabled={isLoading}
               >
                 <Text variant="bodyMedium">{category.title}</Text>
-              </Pressable>
+              </Card>
             ))}
             <Pressable
               style={{
                 ...styles.singeCategory,
                 ...styles.addCategory,
                 ...singleCategorySizes,
+                backgroundColor: "transparent",
+                borderColor: theme.colors.elevation.level4,
               }}
               onPress={() => handleOpenCategoryCreateModal()}
               disabled={isLoading}

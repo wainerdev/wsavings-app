@@ -1,22 +1,28 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
 import "react-native-reanimated";
 import "react-native-gesture-handler";
+import { useEffect } from "react";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import {
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme,
+  Theme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import * as SplashScreen from "expo-splash-screen";
 import { Provider } from "react-redux";
 import store from "@/store";
 import LayoutProtector from "@/components/middleware/LayoutProtector";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { PaperProvider, Text } from "react-native-paper";
-import {  MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
-import useToggleTheme  from "@/hooks/useToggleTheme";
+import {
+  MD3DarkTheme,
+  MD3LightTheme,
+  adaptNavigationTheme,
+} from "react-native-paper";
+import { Colors } from "@/constants/Colors";
+import { useTheme } from "@/hooks/useTheme";
+import merge from "deepmerge";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -39,13 +45,32 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
+const customDarkTheme = { ...MD3DarkTheme, colors: Colors.dark };
+const customLightTheme = { ...MD3LightTheme, colors: Colors.light };
+
+const { LightTheme, DarkTheme } = adaptNavigationTheme({
+  reactNavigationLight: NavigationDefaultTheme,
+  reactNavigationDark: NavigationDarkTheme,
+});
+
+// const CombinedDefaultTheme = merge(LightTheme, customLightTheme);
+// const CombinedDarkTheme = merge(DarkTheme, customDarkTheme);
+
+const CombinedDefaultTheme = merge(MD3LightTheme, LightTheme);
+const CombinedDarkTheme = merge(MD3DarkTheme, DarkTheme);
+
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-  const { theme } = useToggleTheme();
-  const isDarkMode = theme === "dark";
+  const { colorScheme } = useTheme();
+
+  const paperTheme =
+    colorScheme === "dark" ? CombinedDarkTheme : CombinedDefaultTheme;
+
+    console.log('paper', paperTheme)
+    console.log('navigation', NavigationDarkTheme)
+
   return (
-    <PaperProvider theme={isDarkMode ? MD3DarkTheme : MD3LightTheme}>
-      {/* <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}> */}
+    <PaperProvider theme={paperTheme}>
+      <ThemeProvider value={paperTheme as unknown as Theme}>
         <Provider store={store}>
           <LayoutProtector>
             <Stack>
@@ -65,7 +90,7 @@ function RootLayoutNav() {
           </LayoutProtector>
           <StatusBar style="auto" />
         </Provider>
-      {/* </ThemeProvider> */}
+      </ThemeProvider>
     </PaperProvider>
   );
 }

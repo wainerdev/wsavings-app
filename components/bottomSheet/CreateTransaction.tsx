@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { Box } from "@/components/ui/Box";
 import { SegmentedButtons, Button, Text, Chip } from "react-native-paper";
 import { Category } from "@/shared/models/Category";
+import { useTheme } from "react-native-paper";
 
 type Props = {
   componentRef: React.RefObject<BottomSheetModal>;
@@ -26,6 +27,7 @@ const userSchema = Yup.object({
 });
 
 const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
+  const theme = useTheme();
   const { signedUser } = useSelector(({ session }: RootState) => session);
   const { data, isLoading: isGetCategoryLoading } = useGetCategoriesQuery({});
 
@@ -51,7 +53,10 @@ const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
     type: transactionType,
   };
 
-  const onSubmit = (values: TransactionDto, helpers: FormikHelpers<TransactionDto>) => {
+  const onSubmit = (
+    values: TransactionDto,
+    helpers: FormikHelpers<TransactionDto>
+  ) => {
     saveTransaction({
       ...values,
       type: transactionType,
@@ -70,11 +75,18 @@ const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
 
   return (
     <BottomSheetModal
+      handleStyle={{
+        backgroundColor: theme.colors.elevation.level1,
+        borderTopRightRadius: 9,
+        borderTopLeftRadius: 9,
+      }}
       snapPoints={["25%", "80%"]}
       stackBehavior="push"
       ref={componentRef}
     >
-      <BottomSheetView style={styles.container}>
+      <BottomSheetView
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+      >
         <Formik
           initialValues={initialValues}
           validationSchema={userSchema}
@@ -83,10 +95,7 @@ const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
           {(props) => (
             <Box style={styles.form}>
               <View style={styles.formBody}>
-                <FormField
-                  formProps={props}
-                  formKey="description"
-                />
+                <FormField formProps={props} formKey="description" />
                 <FormField
                   formProps={props}
                   formKey="amount"
@@ -94,6 +103,7 @@ const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
                 />
                 <View>
                   <SegmentedButtons
+                    style={styles.actionTypeButtons}
                     density="medium"
                     value={transactionType}
                     onValueChange={(value) =>
@@ -112,7 +122,7 @@ const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
                   />
                 </View>
 
-                <View>
+                <View style={styles.categoriesSlider}>
                   {data?.categories.map((category) => (
                     <Chip
                       selected={selectedCategory?.id === category.id}
@@ -164,6 +174,14 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     height: 64,
+  },
+  actionTypeButtons: {
+    width: 10,
+  },
+  categoriesSlider: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 16,
   },
 });
 

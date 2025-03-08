@@ -11,5 +11,6 @@ export function Box({ style, ...otherProps }: BoxProps) {
 const styles = StyleSheet.create({
   container: {
     padding: BOX_PADDING,
+    backgroundColor: 'transparent',
   },
 });

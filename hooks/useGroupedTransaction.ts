@@ -1,31 +1,38 @@
-import { Transaction } from "@/shared/models/Transaction";
+import { Transaction, TransactionType } from "@/shared/models/Transaction";
 import { useMemo } from "react";
 
-export function useGroupedTransaction(transactions: Transaction[]) {
+interface Props {
+  transactionType: TransactionType;
+  transactions: Transaction[];
+}
+
+export function useGroupedTransaction({ transactionType, transactions }: Props) {
   const groupedByCategory = () => {
     const groups = transactions.reduce(
       (acc, curr) => {
-        const category = curr.category?.title || "unknown";
         const { type, amount } = curr;
+        const category = curr.category?.title || "unknown";
         if (acc[category]) {
-          if(type === "INCOME") {
+          if(transactionType === type) {
             acc[category].amount += amount;
+            acc[category]['id']= curr.category?.id as number;
+            acc[category].transactions.push(curr);
           }
-          if (type === "EXPENSE") {
-            acc[category].amount -= amount;
-          }
-          acc[category].transactions.push(curr);
         } else {
-          acc[category] = {
-            amount: type === "INCOME" ? amount : -amount,
-            transactions: [curr],
-          };
+          if (transactionType === type) {
+            acc[category] = {
+              id: curr.category?.id as number,
+              amount: amount,
+              transactions: [curr],
+            };
+          }
         }
         return acc;
       },
       {} as Record<
         string,
         {
+          id: number;
           amount: number;
           transactions: Transaction[];
         }
@@ -38,6 +45,6 @@ export function useGroupedTransaction(transactions: Transaction[]) {
   };
 
   return {
-    groupedByCategories: useMemo(groupedByCategory, [transactions]),
+    groupedByCategories: useMemo(groupedByCategory, [transactions, transactionType]),
   };
 }

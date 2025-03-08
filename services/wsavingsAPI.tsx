@@ -62,7 +62,7 @@ export const savingsAPI = createApi({
         method: "put",
         body: category,
       }),
-      invalidatesTags: ["Category"],
+      invalidatesTags: ["Category", "Transaction"],
     }),
     signUp: builder.mutation<void, UserDto>({
       query: (user: User) => ({
@@ -109,6 +109,15 @@ export const savingsAPI = createApi({
       }),
       providesTags: ["Transaction"],
     }),
+    getTransactionByUserIdAndCategoryId: builder.query<
+      ListOfTransaction, { categoryId: number }
+    >({
+      query: ({ categoryId}) => ({
+        url: `/transactions/${categoryId}`,
+        method: "GET",
+      }),
+      providesTags: ["Transaction"],
+    }),
   }),
 });
 
@@ -126,4 +135,6 @@ export const {
   useSignInMutation,
   useSaveTransactionMutation,
   useGetTransactionByDateRangeQuery,
+  useGetTransactionByUserIdAndCategoryIdQuery,
+  useLazyGetTransactionByUserIdAndCategoryIdQuery
 } = savingsAPI;
