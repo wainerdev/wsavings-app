@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import * as Yup from "yup";
 import { StyleSheet, View } from "react-native";
-import { useSignInMutation, useSignUpMutation } from "@/services/wsavingsAPI";
+import { useSignUpMutation } from "@/services/wsavingsAPI";
 import { Formik } from "formik";
 import { UserDto } from "@/shared/models/User";
 import { Button, Text } from "react-native-paper";

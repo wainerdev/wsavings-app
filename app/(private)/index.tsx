@@ -1,7 +1,7 @@
-import { Dimensions, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import BannerProfile from "@/components/BannerProfile";
-import { Box, BOX_PADDING } from "@/components/ui/Box";
-import { Button, Text, Icon, useTheme, IconButton } from "react-native-paper";
+import { Box } from "@/components/ui/Box";
+import { Button, Text, useTheme, IconButton } from "react-native-paper";
 import ButtonSheetParentWrapper from "@/components/bottomSheet/ButtonSheetParentWrapper";
 import ButtonSheetCreateTransaction from "@/components/bottomSheet/modals/CreateTransaction";
 import ButtonSheetPreviewTransactions from "@/components/bottomSheet/modals/PreviewTransactions";

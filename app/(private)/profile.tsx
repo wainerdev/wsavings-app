@@ -12,7 +12,6 @@ import { Box } from "@/components/ui/Box";
 import { useTheme } from "@/hooks/useTheme";
 import { SkeletonWrapper, Skeleton } from "@/components/ui/Skeleton";
 import { useEffect } from "react";
-import { Redirect } from "expo-router";
 import { router } from "expo-router";
 
 export default function TabProfile() {

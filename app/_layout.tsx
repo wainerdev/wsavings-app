@@ -14,7 +14,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { Provider } from "react-redux";
 import store from "@/store";
 import LayoutProtector from "@/components/middleware/LayoutProtector";
-import { PaperProvider, Text } from "react-native-paper";
+import { PaperProvider } from "react-native-paper";
 import {
   MD3DarkTheme,
   MD3LightTheme,
