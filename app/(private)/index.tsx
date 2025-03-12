@@ -15,9 +15,11 @@ import CircleIcon from "@/components/CircleIcon";
 import { ButtonSheetSelectTransactionType } from "@/components/bottomSheet/modals/SelectTransactionType";
 import { BarChart } from "@/components/BarChart";
 
+type SelectedModal = "CREATE_TRANSACTION" | "SELECT_TRANSACTION_TYPE" | "PREVIEW_TRANSACTION" | "";
 
 export default function HomeScreen() {
   const theme = useTheme();
+  const [selectedModal, setSelectedModal] = useState<SelectedModal>('');
 
   const bottomSheetCreateTransactionRef = useRef<BottomSheetModal>(null);
   const bottomSheetSelectTransactionsTypeRef = useRef<BottomSheetModal>(null);
@@ -46,15 +48,18 @@ export default function HomeScreen() {
 
   console.log("groups", groupedByCategories);
 
-  const handleOpenCategoryTransactionModal = useCallback(() => {
+  const handleOpenCreateTransactionModal = useCallback(() => {
+    setSelectedModal('CREATE_TRANSACTION');
     bottomSheetCreateTransactionRef.current?.present();
   }, []);
 
   const handleOpenPreviewTransactionsModal = useCallback(() => {
+    setSelectedModal('PREVIEW_TRANSACTION');
     bottomSheetPreviewTransactionsRef.current?.present();
   }, []);
 
   const handleOpenSelectTransactionTypeModal = useCallback(() => {
+    setSelectedModal('SELECT_TRANSACTION_TYPE');
     bottomSheetSelectTransactionsTypeRef.current?.present();
   }, []);
 
@@ -81,6 +86,7 @@ export default function HomeScreen() {
 
           <View>
             <BarChart
+              isLoading={isLoading}
               onClick={({ id}) => {
                 setSelectedTransactionId(id);
                 handleOpenPreviewTransactionsModal();
@@ -103,6 +109,7 @@ export default function HomeScreen() {
           />
 
           <ButtonSheetCreateTransaction
+            isVisible={selectedModal === 'CREATE_TRANSACTION'}
             componentRef={bottomSheetCreateTransactionRef}
             onClose={() => bottomSheetCreateTransactionRef.current?.dismiss()}
           />
@@ -123,7 +130,7 @@ export default function HomeScreen() {
             mode="outlined"
             disabled={isLoading}
             loading={isLoading}
-            onPress={() => handleOpenCategoryTransactionModal()}
+            onPress={() => handleOpenCreateTransactionModal()}
           >
             Add Transaction
           </Button>

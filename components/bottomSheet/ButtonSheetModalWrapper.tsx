@@ -30,16 +30,19 @@ export function ButtonSheetModalWrapper({
       ref={$ref}
     >
       <BottomSheetView
-        style={[styles.container, { backgroundColor: theme.colors.background }]}
+        style={[styles.sheetView, { backgroundColor: theme.colors.background }]}
       >
-        <Box>{children}</Box>
+        <Box style={styles.box}>{children}</Box>
       </BottomSheetView>
     </BottomSheetModal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  sheetView: {
+    height: "100%",
+  },
+  box: {
     flex: 1,
   },
 });

@@ -5,7 +5,7 @@ import { useSignInMutation, useSignUpMutation } from "@/services/wsavingsAPI";
 import { Formik } from "formik";
 import { UserDto } from "@/shared/models/User";
 import { Button, Text } from "react-native-paper";
-import FormField from "@/components/FormField";
+import { FormField} from "@/components/FormField";
 import { router } from "expo-router";
 
 const userSchema = Yup.object({

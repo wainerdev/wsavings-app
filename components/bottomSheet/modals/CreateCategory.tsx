@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import * as Yup from "yup";
 import { StyleSheet, View } from "react-native";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useSaveCategoryMutation } from "@/services/wsavingsAPI";
 import { CategoryDto } from "@/shared/models/Category";
 import { Formik } from "formik";
-import FormField from "@/components/FormField";
+import { FormField } from "@/components/FormField";
 import { Button, Text } from "react-native-paper";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
@@ -17,14 +17,11 @@ type Props = {
   onClose?: () => void;
 };
 
-const userSchema = Yup.object({
+const YUP_SCHEMA = Yup.object({
   title: Yup.string().required("Category name is required"),
 });
 
-const ButtonSheetCreateCategory = ({
-  componentRef,
-  onClose,
-}: Props) => {
+const ButtonSheetCreateCategory = ({ componentRef, onClose }: Props) => {
   const { signedUser } = useSelector(({ session }: RootState) => session);
   const [saveCategory, { isLoading, isError, isSuccess }] =
     useSaveCategoryMutation();
@@ -45,40 +42,33 @@ const ButtonSheetCreateCategory = ({
   }, [isSuccess]);
 
   return (
-    <ButtonSheetModalWrapper
-      snapPoints={["25%", "80%"]}
-      $ref={componentRef}
-    >
-        <Formik
-          initialValues={initialValues}
-          validationSchema={userSchema}
-          onSubmit={onSubmit}
-        >
-          {(props) => (
-            <Box style={styles.form}>
-              <View style={styles.formBody}>
-                <FormField
-                  formProps={props}
-                  formKey="title"
-                  label="Category"
-                />
+    <ButtonSheetModalWrapper snapPoints={["25%", "40%"]} $ref={componentRef}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={YUP_SCHEMA}
+        onSubmit={onSubmit}
+      >
+        {(props) => (
+          <Box style={styles.form}>
+            <View style={styles.formBody}>
+              <FormField formProps={props} formKey="title" label="Category" />
+            </View>
+            <View style={styles.formFooter}>
+              <Button
+                onPress={() => props.handleSubmit()}
+                mode="elevated"
+                disabled={isLoading}
+                loading={isLoading}
+              >
+                Create
+              </Button>
+              <View>
+                {isError && <Text>Error creating the new category</Text>}
               </View>
-              <View style={styles.formFooter}>
-                <Button
-                  onPress={() => props.handleSubmit()}
-                  mode="elevated"
-                  disabled={isLoading}
-                  loading={isLoading}
-                >
-                  Create
-                </Button>
-                <View>
-                  {isError && <Text>Error creating the new category</Text>}
-                </View>
-              </View>
-            </Box>
-          )}
-        </Formik>
+            </View>
+          </Box>
+        )}
+      </Formik>
     </ButtonSheetModalWrapper>
   );
 };

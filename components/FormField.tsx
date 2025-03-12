@@ -1,6 +1,7 @@
 import { FormikProps } from "formik";
 import React from "react";
-import { Text, TextInput, TextInputProps } from "react-native-paper";
+import { View } from "react-native";
+import { Text, TextInput, TextInputProps, useTheme } from "react-native-paper";
 
 interface Props extends TextInputProps {
   formKey: string;
@@ -10,14 +11,15 @@ interface Props extends TextInputProps {
 const capitalize = (s: string) => {
   if (typeof s !== "string") return "";
   return s.charAt(0).toUpperCase() + s.slice(1);
-}
+};
 
-export default function FormField({ formProps, formKey, ...rest }: Props) {
+export function FormField({ formProps, formKey, ...rest }: Props) {
+  const theme = useTheme();
   const { values, errors, touched, handleChange, handleBlur } = formProps;
 
   const hasError = errors[formKey] && touched[formKey];
   return (
-    <>
+    <View>
       <TextInput
         onChangeText={handleChange(formKey)}
         onBlur={handleBlur(formKey)}
@@ -27,8 +29,10 @@ export default function FormField({ formProps, formKey, ...rest }: Props) {
         label={rest.label || capitalize(formKey)}
       />
       {hasError && typeof errors[formKey] === "string" && (
-        <Text>{errors[formKey]}</Text>
+        <Text variant="bodySmall" style={{ color: theme.colors.error }}>
+          {errors[formKey]}
+        </Text>
       )}
-    </>
+    </View>
   );
 }

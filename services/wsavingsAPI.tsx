@@ -78,6 +78,14 @@ export const savingsAPI = createApi({
         body: { email, password },
       }),
     }),
+    signOut: builder.mutation<void, {}>({
+      query: () => ({
+        url: "/users/sign-out",
+        method: "POST",
+        body: { },
+      }),
+      invalidatesTags: ["Profile"],
+    }),
     getProfile: builder.query<{ user: User }, {}>({
       query: () => ({
         url: "/users/profile",
@@ -133,6 +141,7 @@ export const {
   useGetProfileQuery,
   useSignUpMutation,
   useSignInMutation,
+  useSignOutMutation,
   useSaveTransactionMutation,
   useGetTransactionByDateRangeQuery,
   useGetTransactionByUserIdAndCategoryIdQuery,

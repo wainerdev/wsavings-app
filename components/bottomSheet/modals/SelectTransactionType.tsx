@@ -2,7 +2,6 @@ import React from "react";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { TransactionType } from "@/shared/models/Transaction";
 import { SegmentedButtons } from "react-native-paper";
-import { useTheme } from "react-native-paper";
 import { ButtonSheetModalWrapper } from "@/components/bottomSheet/ButtonSheetModalWrapper";
 
 type Props = {
@@ -20,7 +19,6 @@ export function ButtonSheetSelectTransactionType({
   componentRef,
   onClose,
 }: Props) {
-  const theme = useTheme();
   return (
     <ButtonSheetModalWrapper snapPoints={["25%", "30%"]} $ref={componentRef}>
       <SegmentedButtons

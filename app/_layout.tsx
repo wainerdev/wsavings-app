@@ -65,8 +65,8 @@ function RootLayoutNav() {
   const paperTheme =
     colorScheme === "dark" ? CombinedDarkTheme : CombinedDefaultTheme;
 
-    console.log('paper', paperTheme)
-    console.log('navigation', NavigationDarkTheme)
+  console.log("paper", paperTheme);
+  console.log("navigation", NavigationDarkTheme);
 
   return (
     <PaperProvider theme={paperTheme}>

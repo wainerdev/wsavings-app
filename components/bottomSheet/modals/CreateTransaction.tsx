@@ -3,40 +3,45 @@ import * as Yup from "yup";
 import { StyleSheet, View } from "react-native";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
-  useGetCategoriesQuery,
+  useLazyGetCategoriesQuery,
   useSaveTransactionMutation,
 } from "@/services/wsavingsAPI";
 import { TransactionDto, TransactionType } from "@/shared/models/Transaction";
 import { Formik, FormikHelpers } from "formik";
-import FormField from "@/components/FormField";
+import {FormField} from "@/components/FormField";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
-import { Box } from "@/components/ui/Box";
 import { SegmentedButtons, Button, Text, Chip } from "react-native-paper";
 import { Category } from "@/shared/models/Category";
-import { useTheme } from "react-native-paper";
 import { ButtonSheetModalWrapper } from "@/components/bottomSheet/ButtonSheetModalWrapper";
 
 type Props = {
   componentRef: React.RefObject<BottomSheetModal>;
   onClose?: () => void;
+  isVisible?: boolean;
 };
 
-const userSchema = Yup.object({
+const YUP_SCHEMA = Yup.object({
   description: Yup.string().required("Description required"),
   amount: Yup.number().required("Amount required"),
 });
 
-const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
+const INITIAL_VALUES: TransactionDto = {
+  categoryId: null as unknown as number,
+  userId: null as unknown as number,
+  amount: null as unknown as number,
+  description: "",
+  type: "INCOME",
+};
+
+const ButtonSheetCreateTransaction = ({ componentRef, onClose, isVisible }: Props) => {
   const { signedUser } = useSelector(({ session }: RootState) => session);
-  const { data, isLoading: isGetCategoryLoading } = useGetCategoriesQuery({});
+  const [fetchCategories, { data, isLoading: isGetCategoryLoading }] = useLazyGetCategoriesQuery();
 
   const [transactionType, setTransactionType] =
     React.useState<TransactionType>("INCOME");
   const [selectedCategory, setSelectedCategory] =
     React.useState<Category | null>(null);
-
-  console.log("data", selectedCategory);
 
   const [
     saveTransaction,
@@ -44,14 +49,6 @@ const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
   ] = useSaveTransactionMutation();
 
   const isLoading = isSaveTransactionLoading || isGetCategoryLoading;
-
-  const initialValues: TransactionDto = {
-    categoryId: null as unknown as number,
-    userId: null as unknown as number,
-    amount: null as unknown as number,
-    description: "",
-    type: transactionType,
-  };
 
   const onSubmit = (
     values: TransactionDto,
@@ -73,11 +70,18 @@ const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
     }
   }, [isSuccess]);
 
+  useEffect(() => {
+    if (isVisible) {
+      fetchCategories({});
+    }
+  }, [isVisible]);
+
+
   return (
-    <ButtonSheetModalWrapper snapPoints={["25%", "80%"]} $ref={componentRef}>
+    <ButtonSheetModalWrapper snapPoints={["25%", "50%"]} $ref={componentRef}>
       <Formik
-        initialValues={initialValues}
-        validationSchema={userSchema}
+        initialValues={INITIAL_VALUES}
+        validationSchema={YUP_SCHEMA}
         onSubmit={onSubmit}
       >
         {(props) => (
@@ -89,26 +93,24 @@ const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
                 formKey="amount"
                 keyboardType="numeric"
               />
-              <View>
-                <SegmentedButtons
-                  style={styles.actionTypeButtons}
-                  density="medium"
-                  value={transactionType}
-                  onValueChange={(value) =>
-                    setTransactionType(value as TransactionType)
-                  }
-                  buttons={[
-                    {
-                      value: "INCOME" as TransactionType,
-                      label: "+",
-                    },
-                    {
-                      value: "EXPENSE" as TransactionType,
-                      label: "-",
-                    },
-                  ]}
-                />
-              </View>
+              <SegmentedButtons
+                style={styles.actionTypeButtons}
+                density="medium"
+                value={transactionType}
+                onValueChange={(value) =>
+                  setTransactionType(value as TransactionType)
+                }
+                buttons={[
+                  {
+                    value: "INCOME" as TransactionType,
+                    label: "+",
+                  },
+                  {
+                    value: "EXPENSE" as TransactionType,
+                    label: "-",
+                  },
+                ]}
+              />
 
               <View style={styles.categoriesSlider}>
                 {data?.categories.map((category) => (
@@ -122,19 +124,18 @@ const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
                 ))}
               </View>
             </View>
-            <View style={styles.formFooter}>
-              <Button
-                icon="check"
-                onPress={() => props.handleSubmit()}
-                mode="elevated"
-                disabled={isLoading}
-                loading={isLoading}
-              >
-                Add
-              </Button>
-              <View>
-                {isError && <Text>Error creating the new category</Text>}
-              </View>
+
+            <Button
+              icon="check"
+              onPress={() => props.handleSubmit()}
+              mode="elevated"
+              disabled={isLoading}
+              loading={isLoading}
+            >
+              Add
+            </Button>
+            <View>
+              {isError && <Text>Error creating the new category</Text>}
             </View>
           </View>
         )}
@@ -144,9 +145,6 @@ const ButtonSheetCreateTransaction = ({ componentRef, onClose }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   form: {
     flex: 1,
     flexDirection: "column",
@@ -156,11 +154,6 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     gap: 16,
-  },
-  formFooter: {
-    display: "flex",
-    justifyContent: "center",
-    height: 64,
   },
   actionTypeButtons: {
     width: 10,

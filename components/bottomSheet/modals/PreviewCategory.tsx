@@ -11,7 +11,7 @@ import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import { CategoryDto } from "@/shared/models/Category";
 import { Formik } from "formik";
-import FormField from "@/components/FormField";
+import { FormField } from "@/components/FormField";
 import { Button } from "react-native-paper";
 import { Box } from "@/components/ui/Box";
 import { ButtonSheetModalWrapper } from "@/components/bottomSheet/ButtonSheetModalWrapper";
@@ -22,7 +22,7 @@ type Props = {
   onClose?: () => void;
 };
 
-const userSchema = Yup.object({
+const YUP_SCHEMA = Yup.object({
   title: Yup.string().required("Category name is required"),
 });
 
@@ -71,10 +71,10 @@ const ButtonSheetPreviewCategory = ({
   }, [isDeleteCategorySuccess, isUpdateCategorySuccess]);
 
   return (
-    <ButtonSheetModalWrapper snapPoints={["45%", "80%"]} $ref={componentRef}>
+    <ButtonSheetModalWrapper snapPoints={["25%", "40%"]} $ref={componentRef}>
       <Formik
         initialValues={initialValues}
-        validationSchema={userSchema}
+        validationSchema={YUP_SCHEMA}
         onSubmit={onSubmit}
       >
         {(props) => (

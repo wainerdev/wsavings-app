@@ -7,12 +7,10 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import ButtonSheetCreateCategory from "@/components/bottomSheet/modals/CreateCategory";
 import ButtonSheetParentWrapper from "@/components/bottomSheet/ButtonSheetParentWrapper";
 import ButtonSheetPreviewCategory from "@/components/bottomSheet/modals/PreviewCategory";
-import { Skeleton } from "moti/skeleton";
-import { MotiView } from "moti";
 import { Text, Card } from "react-native-paper";
 import { Box, BOX_PADDING } from "@/components/ui/Box";
 import { useTheme } from "react-native-paper";
-
+import { SkeletonWrapper, Skeleton } from "@/components/ui/Skeleton";
 
 const SKELETON_ITEMS = Array.from({ length: 17 });
 
@@ -60,30 +58,30 @@ export default function TabCategories() {
         <Text variant="titleMedium">Chose Your Categories</Text>
 
         {isLoading ? (
-          <MotiView
+          <SkeletonWrapper
             style={styles.categories}
             transition={{
               type: "timing",
             }}
           >
             {SKELETON_ITEMS.map((_, index) => (
-              <Skeleton
-                key={index}
-                {...singleCategorySizes}
-              />
+              <Skeleton key={index} {...singleCategorySizes} />
             ))}
-          </MotiView>
+          </SkeletonWrapper>
         ) : (
           <View style={styles.categories}>
             {data?.categories.map((category, id) => (
-              <Card
+              <Pressable
                 key={id}
-                style={{ ...styles.singeCategory, ...singleCategorySizes }}
                 onPress={() => handleOpenCategoryPreviewModal(category)}
-                disabled={isLoading}
               >
-                <Text variant="bodyMedium">{category.title}</Text>
-              </Card>
+                <Card
+                  style={{ ...styles.singeCategory, ...singleCategorySizes }}
+                  disabled={isLoading}
+                >
+                  <Text variant="bodyMedium">{category.title}</Text>
+                </Card>
+              </Pressable>
             ))}
             <Pressable
               style={{

@@ -19,12 +19,22 @@ type SingleBarChartProps = {
   bar: Bar;
   bgColor: string;
   onClick: (bar: Bar) => void;
+  isLoading: boolean;
 };
 
 type BarChartProps = {
   data: Bar[];
   onClick: (bar: Bar) => void;
+  isLoading: boolean;
 };
+
+const SKELETON_ITEMS = Array.from({ length: 5 }).map((_, index) => ({
+  id: index,
+  label: "loading",
+  value: Math.floor(Math.random() * 250) + 1,
+}));
+
+console.log(SKELETON_ITEMS);
 
 function SingleBarChart({
   maxValue, // max value of all bars
@@ -32,7 +42,8 @@ function SingleBarChart({
   width,
   bar,
   bgColor,
-  onClick
+  onClick,
+  isLoading
 }: SingleBarChartProps) {
   const rStyle = useAnimatedStyle(() => {
     return {
@@ -62,13 +73,16 @@ function SingleBarChart({
           textAlign: "center",
         }}
       >
-        {bar.label} {bar.value}
+        {bar.label}
+        {"\n"}
+        {isLoading ? "" : bar.value}
       </Text>
     </Pressable>
   );
 }
 
-export function BarChart({ data = [], onClick }: BarChartProps) {
+export function BarChart({ data = [], onClick, isLoading = true }: BarChartProps) {
+  console.log('data111', data)
   const theme = useTheme();
   const maxValue = Math.max(...data.map((bar) => bar.value));
   const { width: windowWidth } = useWindowDimensions();
@@ -98,17 +112,37 @@ export function BarChart({ data = [], onClick }: BarChartProps) {
               // marginHorizontal: (windowWidth - BarChartWidth) / 2,
             }}
           >
-            {data.map((bar, index) => (
-              <SingleBarChart
-                bgColor={theme.colors.secondary}
-                maxValue={maxValue}
-                key={index}
-                maxHeight={MaxBarHeight}
-                width={BarWidth}
-                bar={bar}
-                onClick={onClick}
-              />
-            ))}
+            {isLoading ? (
+              <>
+                {SKELETON_ITEMS.map((bar, index) => (
+                  <SingleBarChart 
+                    isLoading={isLoading}
+                    bgColor={theme.colors.secondary}
+                    maxValue={Math.max(...SKELETON_ITEMS.map((bar) => bar.value))}
+                    key={index}
+                    maxHeight={MaxBarHeight}
+                    width={BarWidth}
+                    bar={bar}
+                    onClick={() => {}}
+                  />
+                ))}
+              </>
+            ) : (
+              <>
+                {data.map((bar, index) => (
+                  <SingleBarChart
+                    isLoading={isLoading}
+                    bgColor={theme.colors.secondary}
+                    maxValue={maxValue}
+                    key={index}
+                    maxHeight={MaxBarHeight}
+                    width={BarWidth}
+                    bar={bar}
+                    onClick={onClick}
+                  />
+                ))}
+              </>
+            )}
           </View>
         </View>
       </Box>
